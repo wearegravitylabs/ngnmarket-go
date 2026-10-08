@@ -1,0 +1,8 @@
+*.test
+*.out
+coverage.*
+.env
+.env.*
+.idea/
+.vscode/
+.DS_Store
