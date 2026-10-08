@@ -97,6 +97,28 @@ clamped by the API, so the `...ClosePriceOnOrBefore` helpers return `model.ErrNo
   `List...Symbols` results (the US list is about 1 MB) and prefer `ListAllNGXCompanies` to per-symbol lookups.
 - **Prices are `float64`**, as the API sends them. Convert to a decimal type before doing money arithmetic.
 
+## Pagination
+
+The API pages some list endpoints with `page` (starting at 1) and `limit`. A paged response carries
+`model.Pagination`: `page`, `limit`, `total`, `pages`, `has_next`, `has_prev`.
+
+| Wrapped today | Max `limit` | What you get |
+| --- | --- | --- |
+| `ListNGXCompanies` | 200 | one page plus `Pagination` |
+| `ListAllNGXCompanies` | 200 | follows the pages for you and returns every company (normally one call) |
+| `ListUSTickers` | 200 | one page plus `Pagination` |
+| `FindUSTicker` | 100 | scans up to 3 pages looking for an exact symbol |
+| `ListUSSymbols`, `ListNGXSymbols` | n/a | not paged: the whole list in one response |
+
+Other endpoints are paged too (disclosures, bonds, ETFs, dividends, insiders, blog posts, account logs, director
+dealings) but are not wrapped yet; they will reuse `model.Pagination`. A shared "walk every page" helper is an open
+task in [TASKS.md](TASKS.md). Endpoints that only take `limit` (market movers, top trades, news and similar) are not
+paged: `limit` just means "give me the top N".
+
+## Contributing
+
+New here? Start with [TASKS.md](TASKS.md): a step-by-step recipe and the full list of endpoints still to wrap.
+
 ## Errors
 
 ```go
