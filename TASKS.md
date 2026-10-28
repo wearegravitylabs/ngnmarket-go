@@ -7,7 +7,7 @@ the endpoints**, one at a time, in the same style.
 You do not need to be an expert. Every task is "copy the pattern, change the names". Start with the tasks marked
 **S**, and ask when you get stuck.
 
-## 1. Get set up (about 15 minutes)
+## 1. Get set up (about 15 minutes)....
 
 1. Install Go 1.22 or newer (`go version` to check).
 2. Clone the repo and run the tests. They should all pass before you change anything.
@@ -36,7 +36,7 @@ go run ./examples/ngx_market
 go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@latest
 ```
 
-## 2. Where things live
+## 2. Where things live....
 
 ```
 api/api.go        the list of every call (the RemoteCalls interface). Add your method here.
@@ -48,7 +48,7 @@ api/*_test.go     tests.       examples/   small programs people can run.
 api/mock/         generated, never edit by hand. Run `go generate ./...` to refresh it.
 ```
 
-## 3. The recipe: add one endpoint
+## 3. The recipe: add one endpoint....
 
 Do exactly this for every task. The finished example to copy is **`ListNGXSymbols`**
 (`GET /companies/identifiers`). Open these four places and see how it was done:
@@ -96,7 +96,7 @@ func (c *Call) GetForexRates(ctx context.Context) (*model.ForexRates, error) {
 For a call with a symbol, escape it: `"/companies/"+url.PathEscape(symbol)+"/dividends"`.
 For a list with page and limit, copy `ListNGXCompanies`.
 
-**Step 6. Write a test** in the matching `api/*_test.go` file. Copy any existing test: it starts a fake server
+**Step 6. Write a test... DONE** in the matching `api/*_test.go` file. Copy any existing test: it starts a fake server
 with `serve(...)` and returns a small JSON body (use a real response you saved in step 2). Check at least: the URL
 and query were right, the numbers came out right, and a `null` does not crash it. **Tests never call the real API.**
 
@@ -110,7 +110,7 @@ go generate ./...     # refreshes the mock
 Then add a row to the endpoint table in `README.md` and a line under `[Unreleased]` in `CHANGELOG.md`.
 Open **one pull request per endpoint** (or per small group), titled like the issue.
 
-## 4. Rules
+## 4. Rules....
 
 - **Never commit an API key.** Not in code, tests, examples or the README. Use `os.Getenv("NGNMARKET_API_KEY")`.
 - **Do not edit `api/util.go`, `api/mock/` or `model/errors.go`** unless a task says so.
@@ -142,101 +142,101 @@ plus the Docs path.
 
 Do these first, top to bottom. They teach you the recipe.
 
-| Done | Route | Suggested method | Docs path | Size |
-| :-: | --- | --- | --- | :-: |
-| [ ] | `GET /forex/current` | `GetForexRates` | `/api-reference/forex/current` | S |
-| [ ] | `GET /market/status` | `GetNGXMarketStatus` | `/api-reference/market/status` | S |
-| [ ] | `GET /market/snapshot` | `GetNGXMarketSnapshot` | `/api-reference/market/snapshot` | S |
-| [ ] | `GET /indices` | `ListNGXIndices` | `/api-reference/indices/list` | S |
-| [ ] | `GET /account/usage` | `GetAccountUsage` | `/api-reference/account/usage` | S |
-| [ ] | `GET /us/market/status` | `GetUSMarketStatus` | `/us/market/status` | S |
-| [ ] | `GET /us/market/snapshot` | `GetUSMarketSnapshot` | `/us/market/snapshot` | S |
-| [ ] | `GET /us/indices` | `ListUSIndices` | `/us/indices/list` | S |
+| Done | Route                     | Suggested method       | Docs path                        | Size |
+| :--: | ------------------------- | ---------------------- | -------------------------------- | :--: |
+| [ ]  | `GET /forex/current`      | `GetForexRates`        | `/api-reference/forex/current`   |  S   |
+| [ ]  | `GET /market/status`      | `GetNGXMarketStatus`   | `/api-reference/market/status`   |  S   |
+| [ ]  | `GET /market/snapshot`    | `GetNGXMarketSnapshot` | `/api-reference/market/snapshot` |  S   |
+| [ ]  | `GET /indices`            | `ListNGXIndices`       | `/api-reference/indices/list`    |  S   |
+| [ ]  | `GET /account/usage`      | `GetAccountUsage`      | `/api-reference/account/usage`   |  S   |
+| [ ]  | `GET /us/market/status`   | `GetUSMarketStatus`    | `/us/market/status`              |  S   |
+| [ ]  | `GET /us/market/snapshot` | `GetUSMarketSnapshot`  | `/us/market/snapshot`            |  S   |
+| [ ]  | `GET /us/indices`         | `ListUSIndices`        | `/us/indices/list`               |  S   |
 
 ### Milestone B: More Free endpoints (lists and paging)
 
-| Done | Route | Suggested method | Docs path | Size |
-| :-: | --- | --- | --- | :-: |
-| [ ] | `GET /market/holidays` (has `limit`) | `ListNGXMarketHolidays` | `/api-reference/market/holidays` | S |
-| [ ] | `GET /market/available-dates` (has `limit`) | `ListNGXMarketDates` | `/api-reference/market/available-dates` | S |
-| [ ] | `GET /us/market/holidays` | `ListUSMarketHolidays` | `/us/market/holidays` | S |
-| [ ] | `GET /us/market/available-dates` | `ListUSMarketDates` | `/us/market/available-dates` | S |
-| [ ] | `GET /etfs` (paged) | `ListNGXETFs` | `/api-reference/etfs/list` | M |
-| [ ] | `GET /disclosures` (paged) | `ListDisclosures` | `/api-reference/disclosures/list` | M |
-| [ ] | `GET /disclosures/types` | `ListDisclosureTypes` | `/api-reference/disclosures/types` | S |
-| [ ] | `GET /disclosures/categories` | `ListDisclosureCategories` | `/api-reference/disclosures/categories` | S |
-| [ ] | `GET /companies/{symbol}/disclosures` (paged) | `ListCompanyDisclosures` | `/api-reference/companies/disclosures` | M |
-| [ ] | `GET /companies/{symbol}/disclosures/categories` | `ListCompanyDisclosureCategories` | `/api-reference/companies/disclosures-categories` | S |
-| [ ] | `GET /blog/posts` (paged) | `ListBlogPosts` | `/api-reference/blog/posts` | M |
-| [ ] | `GET /blog/posts/{slug}` | `GetBlogPost` | `/api-reference/blog/post-detail` | M |
-| [ ] | `GET /blog/search` | `SearchBlogPosts` | `/api-reference/blog/search` | M |
+| Done | Route                                            | Suggested method                  | Docs path                                         | Size |
+| :--: | ------------------------------------------------ | --------------------------------- | ------------------------------------------------- | :--: |
+| [ ]  | `GET /market/holidays` (has `limit`)             | `ListNGXMarketHolidays`           | `/api-reference/market/holidays`                  |  S   |
+| [ ]  | `GET /market/available-dates` (has `limit`)      | `ListNGXMarketDates`              | `/api-reference/market/available-dates`           |  S   |
+| [ ]  | `GET /us/market/holidays`                        | `ListUSMarketHolidays`            | `/us/market/holidays`                             |  S   |
+| [ ]  | `GET /us/market/available-dates`                 | `ListUSMarketDates`               | `/us/market/available-dates`                      |  S   |
+| [ ]  | `GET /etfs` (paged)                              | `ListNGXETFs`                     | `/api-reference/etfs/list`                        |  M   |
+| [ ]  | `GET /disclosures` (paged)                       | `ListDisclosures`                 | `/api-reference/disclosures/list`                 |  M   |
+| [ ]  | `GET /disclosures/types`                         | `ListDisclosureTypes`             | `/api-reference/disclosures/types`                |  S   |
+| [ ]  | `GET /disclosures/categories`                    | `ListDisclosureCategories`        | `/api-reference/disclosures/categories`           |  S   |
+| [ ]  | `GET /companies/{symbol}/disclosures` (paged)    | `ListCompanyDisclosures`          | `/api-reference/companies/disclosures`            |  M   |
+| [ ]  | `GET /companies/{symbol}/disclosures/categories` | `ListCompanyDisclosureCategories` | `/api-reference/companies/disclosures-categories` |  S   |
+| [ ]  | `GET /blog/posts` (paged)                        | `ListBlogPosts`                   | `/api-reference/blog/posts`                       |  M   |
+| [ ]  | `GET /blog/posts/{slug}`                         | `GetBlogPost`                     | `/api-reference/blog/post-detail`                 |  M   |
+| [ ]  | `GET /blog/search`                               | `SearchBlogPosts`                 | `/api-reference/blog/search`                      |  M   |
 
 ### Milestone C: Hobby plan (build from the docs, unverified)
 
-| Done | Route | Suggested method | Docs path | Size |
-| :-: | --- | --- | --- | :-: |
-| [ ] | `GET /indices/{symbol}` | `GetNGXIndex` | `/api-reference/indices/detail` | M |
-| [ ] | `GET /indices/{symbol}/chart` | `GetNGXIndexChart` | `/api-reference/indices/chart` | M |
-| [ ] | `GET /forex/history` | `GetForexHistory` | `/api-reference/forex/history` | M |
-| [ ] | `GET /us/indices/{symbol}` | `GetUSIndex` | `/us/indices/detail` | M |
-| [ ] | `GET /us/indices/{symbol}/chart` | `GetUSIndexChart` | `/us/indices/chart` | M |
+| Done | Route                            | Suggested method   | Docs path                       | Size |
+| :--: | -------------------------------- | ------------------ | ------------------------------- | :--: |
+| [ ]  | `GET /indices/{symbol}`          | `GetNGXIndex`      | `/api-reference/indices/detail` |  M   |
+| [ ]  | `GET /indices/{symbol}/chart`    | `GetNGXIndexChart` | `/api-reference/indices/chart`  |  M   |
+| [ ]  | `GET /forex/history`             | `GetForexHistory`  | `/api-reference/forex/history`  |  M   |
+| [ ]  | `GET /us/indices/{symbol}`       | `GetUSIndex`       | `/us/indices/detail`            |  M   |
+| [ ]  | `GET /us/indices/{symbol}/chart` | `GetUSIndexChart`  | `/us/indices/chart`             |  M   |
 
 ### Milestone D: Starter plan (unverified)
 
-| Done | Route | Suggested method | Docs path | Size |
-| :-: | --- | --- | --- | :-: |
-| [ ] | `GET /market/top-trades` | `ListNGXTopTrades` | `/api-reference/market/top-trades` | M |
-| [ ] | `GET /market/movers` | `GetNGXMarketMovers` | `/api-reference/market/movers` | M |
-| [ ] | `GET /us/market/movers` | `GetUSMarketMovers` | `/us/market/movers` | M |
-| [ ] | `GET /us/market/trending` | `GetUSMarketTrending` | `/us/market/trending` | M |
-| [ ] | `GET /companies/{symbol}/dividends` | `ListNGXCompanyDividends` | `/api-reference/companies/dividends` | M |
-| [ ] | `GET /dividends/upcoming` (paged) | `ListUpcomingDividends` | `/api-reference/dividends/upcoming` | M |
-| [ ] | `GET /dividends/recent` (paged) | `ListRecentDividends` | `/api-reference/dividends/recent` | M |
-| [ ] | `GET /companies/{symbol}/news` | `ListNGXCompanyNews` | `/api-reference/companies/news` | M |
-| [ ] | `GET /bonds` (paged) | `ListBonds` | `/api-reference/bonds/list` | M |
-| [ ] | `GET /etfs/{symbol}` | `GetNGXETF` | `/api-reference/etfs/detail` | M |
-| [ ] | `GET /etfs/{symbol}/chart` | `GetNGXETFChart` | `/api-reference/etfs/chart` | M |
-| [ ] | `GET /us/tickers/{symbol}/officers` | `ListUSTickerOfficers` | `/us/tickers/officers` | S |
-| [ ] | `GET /companies/{symbol}/financials/ratios` | `GetNGXFinancialRatios` | `/api-reference/companies/financials-ratios` | M |
-| [ ] | `GET /account/logs` (paged) | `ListAccountLogs` | `/api-reference/account/logs` | M |
+| Done | Route                                       | Suggested method          | Docs path                                    | Size |
+| :--: | ------------------------------------------- | ------------------------- | -------------------------------------------- | :--: |
+| [ ]  | `GET /market/top-trades`                    | `ListNGXTopTrades`        | `/api-reference/market/top-trades`           |  M   |
+| [ ]  | `GET /market/movers`                        | `GetNGXMarketMovers`      | `/api-reference/market/movers`               |  M   |
+| [ ]  | `GET /us/market/movers`                     | `GetUSMarketMovers`       | `/us/market/movers`                          |  M   |
+| [ ]  | `GET /us/market/trending`                   | `GetUSMarketTrending`     | `/us/market/trending`                        |  M   |
+| [ ]  | `GET /companies/{symbol}/dividends`         | `ListNGXCompanyDividends` | `/api-reference/companies/dividends`         |  M   |
+| [ ]  | `GET /dividends/upcoming` (paged)           | `ListUpcomingDividends`   | `/api-reference/dividends/upcoming`          |  M   |
+| [ ]  | `GET /dividends/recent` (paged)             | `ListRecentDividends`     | `/api-reference/dividends/recent`            |  M   |
+| [ ]  | `GET /companies/{symbol}/news`              | `ListNGXCompanyNews`      | `/api-reference/companies/news`              |  M   |
+| [ ]  | `GET /bonds` (paged)                        | `ListBonds`               | `/api-reference/bonds/list`                  |  M   |
+| [ ]  | `GET /etfs/{symbol}`                        | `GetNGXETF`               | `/api-reference/etfs/detail`                 |  M   |
+| [ ]  | `GET /etfs/{symbol}/chart`                  | `GetNGXETFChart`          | `/api-reference/etfs/chart`                  |  M   |
+| [ ]  | `GET /us/tickers/{symbol}/officers`         | `ListUSTickerOfficers`    | `/us/tickers/officers`                       |  S   |
+| [ ]  | `GET /companies/{symbol}/financials/ratios` | `GetNGXFinancialRatios`   | `/api-reference/companies/financials-ratios` |  M   |
+| [ ]  | `GET /account/logs` (paged)                 | `ListAccountLogs`         | `/api-reference/account/logs`                |  M   |
 
 ### Milestone E: Pro plan (unverified)
 
-| Done | Route | Suggested method | Docs path | Size |
-| :-: | --- | --- | --- | :-: |
-| [ ] | `GET /market/breadth` | `ListNGXMarketBreadth` | `/api-reference/market/breadth` | M |
-| [ ] | `GET /market/sectors` | `ListNGXSectors` | `/api-reference/market/sectors` | M |
-| [ ] | `GET /market/ytd-performers` | `ListNGXYTDPerformers` | `/api-reference/market/ytd-performers` | M |
-| [ ] | `GET /us/market/breadth` | `GetUSMarketBreadth` | `/us/market/breadth` | M |
-| [ ] | `GET /us/market/sectors` | `ListUSSectors` | `/us/market/sectors` | M |
-| [ ] | `GET /us/market/ytd-performers` | `ListUSYTDPerformers` | `/us/market/ytd-performers` | M |
-| [ ] | `GET /companies/{symbol}/financials/income` | `GetNGXIncomeStatement` | `/api-reference/companies/financials-income` | M |
-| [ ] | `GET /companies/{symbol}/financials/growth` | `GetNGXFinancialGrowth` | `/api-reference/companies/financials-growth` | M |
-| [ ] | `GET /companies/{symbol}/director-dealings` (paged) | `ListNGXDirectorDealings` | `/api-reference/companies/director-dealings` | M |
-| [ ] | `GET /companies/{symbol}/director-dealings/summary` | `GetNGXDirectorDealingsSummary` | `/api-reference/companies/director-dealings-summary` | M |
+| Done | Route                                               | Suggested method                | Docs path                                            | Size |
+| :--: | --------------------------------------------------- | ------------------------------- | ---------------------------------------------------- | :--: |
+| [ ]  | `GET /market/breadth`                               | `ListNGXMarketBreadth`          | `/api-reference/market/breadth`                      |  M   |
+| [ ]  | `GET /market/sectors`                               | `ListNGXSectors`                | `/api-reference/market/sectors`                      |  M   |
+| [ ]  | `GET /market/ytd-performers`                        | `ListNGXYTDPerformers`          | `/api-reference/market/ytd-performers`               |  M   |
+| [ ]  | `GET /us/market/breadth`                            | `GetUSMarketBreadth`            | `/us/market/breadth`                                 |  M   |
+| [ ]  | `GET /us/market/sectors`                            | `ListUSSectors`                 | `/us/market/sectors`                                 |  M   |
+| [ ]  | `GET /us/market/ytd-performers`                     | `ListUSYTDPerformers`           | `/us/market/ytd-performers`                          |  M   |
+| [ ]  | `GET /companies/{symbol}/financials/income`         | `GetNGXIncomeStatement`         | `/api-reference/companies/financials-income`         |  M   |
+| [ ]  | `GET /companies/{symbol}/financials/growth`         | `GetNGXFinancialGrowth`         | `/api-reference/companies/financials-growth`         |  M   |
+| [ ]  | `GET /companies/{symbol}/director-dealings` (paged) | `ListNGXDirectorDealings`       | `/api-reference/companies/director-dealings`         |  M   |
+| [ ]  | `GET /companies/{symbol}/director-dealings/summary` | `GetNGXDirectorDealingsSummary` | `/api-reference/companies/director-dealings-summary` |  M   |
 
 ### Milestone F: Business plan (unverified)
 
-| Done | Route | Suggested method | Docs path | Size |
-| :-: | --- | --- | --- | :-: |
-| [ ] | `GET /companies/{symbol}/financials` | `GetNGXFinancials` | `/api-reference/companies/financials` | M |
-| [ ] | `GET /companies/{symbol}/financials/balance-sheet` | `GetNGXBalanceSheet` | `/api-reference/companies/financials-balance-sheet` | M |
-| [ ] | `GET /companies/{symbol}/financials/cash-flow` | `GetNGXCashFlow` | `/api-reference/companies/financials-cash-flow` | M |
-| [ ] | `GET /companies/{symbol}/financials/ttm` | `GetNGXFinancialsTTM` | `/api-reference/companies/financials-ttm` | M |
-| [ ] | `GET /insiders` (paged) | `ListInsiderDealings` | `/api-reference/insiders/list` | M |
-| [ ] | `GET /insiders/clusters` | `ListInsiderClusters` | `/api-reference/insiders/clusters` | M |
+| Done | Route                                              | Suggested method      | Docs path                                           | Size |
+| :--: | -------------------------------------------------- | --------------------- | --------------------------------------------------- | :--: |
+| [ ]  | `GET /companies/{symbol}/financials`               | `GetNGXFinancials`    | `/api-reference/companies/financials`               |  M   |
+| [ ]  | `GET /companies/{symbol}/financials/balance-sheet` | `GetNGXBalanceSheet`  | `/api-reference/companies/financials-balance-sheet` |  M   |
+| [ ]  | `GET /companies/{symbol}/financials/cash-flow`     | `GetNGXCashFlow`      | `/api-reference/companies/financials-cash-flow`     |  M   |
+| [ ]  | `GET /companies/{symbol}/financials/ttm`           | `GetNGXFinancialsTTM` | `/api-reference/companies/financials-ttm`           |  M   |
+| [ ]  | `GET /insiders` (paged)                            | `ListInsiderDealings` | `/api-reference/insiders/list`                      |  M   |
+| [ ]  | `GET /insiders/clusters`                           | `ListInsiderClusters` | `/api-reference/insiders/clusters`                  |  M   |
 
 ### Milestone G: SDK improvements (after the endpoints, or in between if you want a change)
 
 These are about the SDK itself, not new endpoints. Talk to the team lead before starting any of them.
 
-| Done | Task | Notes | Size |
-| :-: | --- | --- | :-: |
-| [ ] | **Paging helper** | One reusable function that walks every page of a paged endpoint, so nobody writes the page loop by hand. See `ListAllNGXCompanies` for the idea. Add it once the first two or three paged endpoints exist. | M |
-| [ ] | **NGX chart formats** | `GetNGXPriceChart` always asks for `format=detailed`. Add the compact `chart` and `ohlcv` formats (used for candlestick charts). | M |
-| [ ] | **Optional logging** | A `WithLogger` option so apps can see each request (method, path, status, how long). Never log the API key. | M |
-| [ ] | **Check the paid shapes** | Someone with a Hobby or higher key runs `make integration`, compares the real responses with our models, and fixes differences (`GetNGXCompany`, `GetNGXPriceChart`, US detail and chart). Mark `blocked` until a paid key exists. | M |
-| [ ] | **WebSocket client** | Live prices over WebSocket (<https://docs.ngnmarket.com/websocket/introduction>). Large. Not for a first task. | L |
+| Done | Task                      | Notes                                                                                                                                                                                                                              | Size |
+| :--: | ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--: |
+| [ ]  | **Paging helper**         | One reusable function that walks every page of a paged endpoint, so nobody writes the page loop by hand. See `ListAllNGXCompanies` for the idea. Add it once the first two or three paged endpoints exist.                         |  M   |
+| [ ]  | **NGX chart formats**     | `GetNGXPriceChart` always asks for `format=detailed`. Add the compact `chart` and `ohlcv` formats (used for candlestick charts).                                                                                                   |  M   |
+| [ ]  | **Optional logging**      | A `WithLogger` option so apps can see each request (method, path, status, how long). Never log the API key.                                                                                                                        |  M   |
+| [ ]  | **Check the paid shapes** | Someone with a Hobby or higher key runs `make integration`, compares the real responses with our models, and fixes differences (`GetNGXCompany`, `GetNGXPriceChart`, US detail and chart). Mark `blocked` until a paid key exists. |  M   |
+| [ ]  | **WebSocket client**      | Live prices over WebSocket (<https://docs.ngnmarket.com/websocket/introduction>). Large. Not for a first task.                                                                                                                     |  L   |
 
 ## 7. Common mistakes (read before your first pull request)
 

@@ -66,6 +66,21 @@ func (mr *MockRemoteCallsMockRecorder) FindUSTicker(ctx, symbol interface{}) *go
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindUSTicker", reflect.TypeOf((*MockRemoteCalls)(nil).FindUSTicker), ctx, symbol)
 }
 
+// GetForexRates mocks base method.
+func (m *MockRemoteCalls) GetForexRates(ctx context.Context) (*model.ForexRates, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetForexRates", ctx)
+	ret0, _ := ret[0].(*model.ForexRates)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetForexRates indicates an expected call of GetForexRates.
+func (mr *MockRemoteCallsMockRecorder) GetForexRates(ctx interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetForexRates", reflect.TypeOf((*MockRemoteCalls)(nil).GetForexRates), ctx)
+}
+
 // GetNGXClosePriceOnOrBefore mocks base method.
 func (m *MockRemoteCalls) GetNGXClosePriceOnOrBefore(ctx context.Context, symbol string, day time.Time) (model.PricePoint, error) {
 	m.ctrl.T.Helper()

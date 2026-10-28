@@ -71,6 +71,8 @@ type RemoteCalls interface {
 	// GetUSClosePriceOnOrBefore returns the close on day, or on the nearest
 	// earlier trading day (Hobby+). model.ErrNoData if there is none.
 	GetUSClosePriceOnOrBefore(ctx context.Context, symbol string, day time.Time) (model.PricePoint, error)
+	// GetForexRates returns the latest NGN exchange rates (Free plan).
+	GetForexRates(ctx context.Context) (*model.ForexRates, error)
 }
 
 // Call is the NGN Market client. It implements RemoteCalls.
@@ -114,4 +116,21 @@ func newCall(apiKey string, opts ...Option) (*Call, error) {
 		}
 	}
 	return c, nil
+}
+
+// ForexRates is the data object returned by GET /forex/current.
+type ForexRates struct {
+	Target string      `json:"target"` // "NGN"
+	Date   *time.Time  `json:"date"`
+	Rates  []ForexRate `json:"rates"`
+}
+
+// ForexRate is the naira exchange rate for one currency.
+type ForexRate struct {
+	Currency           string     `json:"currency"` // "USD", "GBP", ...
+	Rate               float64    `json:"rate"`     // NGN per 1 unit of Currency
+	InverseRate        float64    `json:"inverse_rate"`
+	DailyChange        float64    `json:"daily_change"`
+	DailyChangePercent float64    `json:"daily_change_percent"`
+	LastUpdated        *time.Time `json:"last_updated"`
 }

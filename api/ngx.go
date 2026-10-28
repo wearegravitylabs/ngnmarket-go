@@ -129,3 +129,34 @@ func (c *Call) GetNGXClosePriceOnOrBefore(ctx context.Context, symbol string, da
 	}
 	return best, nil
 }
+
+// GetNGXMarketStatus returns whether the NGX is open or closed (Free plan) - https://docs.ngnmarket.com/api-reference/market/status
+func (c *Call) GetNGXMarketStatus(ctx context.Context) (*model.NGXMarketStatus, error) {
+	var out model.NGXMarketStatus
+	meta, err := c.makeRequest(ctx, "/market/status", nil, &out)
+	if err != nil {
+		return nil, err
+	}
+	out.Meta = meta
+	return &out, nil
+}
+
+// GetNGXMarketSnapshot returns the daily NGX market summary (Free plan) - https://docs.ngnmarket.com/api-reference/market/snapshot
+func (c *Call) GetNGXMarketSnapshot(ctx context.Context) (*model.NGXMarketSnapshot, error) {
+	var out model.NGXMarketSnapshot
+	meta, err := c.makeRequest(ctx, "/market/snapshot", nil, &out)
+	if err != nil {
+		return nil, err
+	}
+	out.Meta = meta
+	return &out, nil
+}
+
+// ListNGXIndices returns every NGX index with its current value (Free plan) - https://docs.ngnmarket.com/api-reference/indices/list
+func (c *Call) ListNGXIndices(ctx context.Context) ([]model.NGXIndex, error) {
+	var out []model.NGXIndex
+	if _, err := c.makeRequest(ctx, "/indices", nil, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
